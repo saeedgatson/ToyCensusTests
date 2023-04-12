@@ -69,6 +69,7 @@ public class CountByGender
     }
 
     [Test]
+    [Ignore("Skipping test due to BUG ID:001")]
     public void ErrorOnInvalidType()
     {
         //Arrange

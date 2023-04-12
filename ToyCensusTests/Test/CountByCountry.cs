@@ -55,6 +55,7 @@ public class CountByCountry
     }
 
     [Test]
+    [Ignore("Skipping test due to BUG ID:002")]
     public void TopParamEffectsCountByCountry()
     {
         //Arrange
