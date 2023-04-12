@@ -74,3 +74,101 @@ Note that you might also need to set the test project path before test can be fo
 ### Console
 
 1. The test can also be ran through the terminal using [nunit3-console](https://docs.nunit.org/articles/nunit/running-tests/Console-Runner.html) runner.
+
+# Bugs Found
+
+## ID: 002
+
+**Title/Name :** Top Parameter Doesn’t Limit Returned Results
+
+**Summary :** When the “top” parameter is non-null and greater than zero it should be the maximum number of results returned.
+
+**Environment :** PROD
+
+**Severity :** P0
+
+**Steps to reproduce :** 
+
+1. Create a POST body that has multiple users from 3 different countries.
+2. Set the actionType to `CountByCountry` , and the top to `2` .
+3. Submit a Post Request to endpoint and view the results.
+
+**Expected vs. actual results :** Expected - 2 or less results are returned. Actual - 3 results are being returned `Printing results : [{"name":"US","value":747},{"name":"MX","value":786},{"name":"AU","value":689}]`
+
+## ID: 001
+
+**Title/Name :** No Error Message Returned When Invlaid Type Is Used
+
+**Summary :** An empty string is returns when sending an HTTP POST request to the Toy Census API with and invalid “actionType”.
+
+**Environment :** PROD
+
+**Severity :** P1
+
+**Console logs :**
+
+```bash
+Response Headers
+Content-Type: application/json
+Content-Length: 0
+Connection: keep-alive
+Date: Wed, 12 Apr 2023 07:51:39 GMT
+x-amzn-RequestId: ee2dc0ac-244b-4388-915c-522324c14c14
+x-amz-apigw-id: DQRp4E3CIAMFRww=
+X-Amzn-Trace-Id: Root=1-6436630b-363a6d612d995573060e9aa3;Sampled=0;lineage=6e69f56a:0
+X-Cache: Miss from cloudfront
+Via: 1.1 ec18462cf9d88c8bdb0cd5e50dbe442a.cloudfront.net (CloudFront)
+X-Amz-Cf-Pop: IAD89-P2
+X-Amz-Cf-Id: a9lJL5GKm8c3SrS-IadPveXP7cmjTy6PWGxfs50uMS0GvqHrM7ubgw==
+Response Body:
+```
+
+**Steps to reproduce :** Submit a Post Request to endpoint with the following JSON body. See that the “actionType” is set to “CountCountry” which is invalid.
+
+```json
+{
+  "actionType": "CountCountry",
+  "top": 0,
+  "users": [
+    {
+      "gender": "female",
+      "name": {
+        "title": "miss",
+        "first": "lorraine",
+        "last": "bryant"
+      },
+      "location": {
+        "street": "4422 harrison ct",
+        "city": "gladstone",
+        "state": "tasmania",
+        "postcode": 3294
+      },
+      "email": "lorraine.bryant@example.com",
+      "login": {
+        "username": "smallduck444",
+        "password": "aaron",
+        "salt": "fYBp4g4a",
+        "md5": "5d0785427febd6d262f00929c10247e7",
+        "sha1": "a12a6925740eefebebcbc79add949fa108a78bf0",
+        "sha256": "61a79aebd11cd5910dd9e77dd49b3dd11df2b4b397e328697f33b86e5b082b84"
+      },
+      "dob": "1956-09-17 02:13:36",
+      "registered": "2009-05-03 14:40:51",
+      "phone": "00-3540-6154",
+      "cell": "0498-678-691",
+      "id": {
+        "name": "TFN",
+        "value": "377488473"
+      },
+      "picture": {
+        "large": "https://randomuser.me/api/portraits/women/38.jpg",
+        "medium": "https://randomuser.me/api/portraits/med/women/38.jpg",
+        "thumbnail": "https://randomuser.me/api/portraits/thumb/women/38.jpg"
+      },
+      "nat": "AU"
+    }
+  ]
+}
+```
+
+**Expected vs. actual results :** Expected - Error message is returned. Actual - Empty string is returned.
